@@ -152,6 +152,12 @@
       process_url();
     });
     
+    $('#status').bind("paste", function(){
+      setTimeout(function(){
+        process_url();
+      }, 50);
+    });
+    
     $("#get_images").click(function(){
       process_url();
       return false;
