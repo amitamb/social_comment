@@ -31,6 +31,7 @@
     
     var current_image_indx = null;
     var total_images = 0;
+    var img_selector_loading; // TODO: Later for handling multiple loading
     
     function select_image(indx){
       current_image_indx = indx;
@@ -61,6 +62,11 @@
       $("#img_selector").html("");
     }
     
+    function hide_all(){
+      $("#img_selector_parent").css({ 'display' : 'none' });
+      $("#img_selector").html("");
+    }
+    
     function reset_all(){
       current_image_indx = null;
       total_images = 0;
@@ -83,15 +89,20 @@
 
       toggle_navigation();
     }
-  
+
     function load_images(images){
       $("#img_selector").html('#{ image_tag 'loading.gif', :style => 'display:block;' }');
+      
+      if (images.length == 0){
+        hide_all();
+      }
+      
       for (var image in images){
         var new_img = $("<img src='"+ images[image] +"' />");
         new_img.appendTo("#offscreen_div");
         new_img.load(function(){
           if ($(this).width() > 50 && $(this).height() > 50){
-            append_image($(this))
+            append_image($(this));
           }
         });
       }
@@ -116,6 +127,9 @@
       var matches = $("#status").val().match(url_re);
       
       if (!matches) {
+        if (last_processed_url){
+          hide_all();
+        }
         return;
       }
 
@@ -143,15 +157,11 @@
       );
     }
     
-    var last_partial_url_id = "";
+    //var last_partial_url_timeout_id = null;
     
     $('#status').keyup(function(event){
       if (event.which == 32){
         process_url();
-      }
-      else
-      {
-        
       }
     });
     
@@ -174,6 +184,12 @@
 
 #offscreen_div
 
+=form_tag "/social/create", :remote => true, :id => "status_form" do
+  =text_field_tag "status", "www.google.com"
+  =hidden_field_tag "image_url"
+  %button{:id => "get_images"} Get Images
+  =submit_tag "Send"
+
 #img_selector_parent
   %table
     %tr
@@ -189,8 +205,4 @@
 
 %span#selector_status
 
-=form_tag "/social/create", :remote => true, :id => "status_form" do
-  =text_field_tag "status", "www.google.com"
-  =hidden_field_tag "image_url"
-  %button{:id => "get_images"} Get Images
-  =submit_tag "Send"
+
