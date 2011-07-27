@@ -13,12 +13,18 @@ class SocialController < ApplicationController
   
     @req_url = params[:url].strip
     
+    if !( @req_url.start_with?("http") || @req_url.start_with?("https") )
+      @req_url = "http://" + @req_url
+    end
+    
     a = Mechanize.new { |agent|
-      agent.user_agent_alias = 'Mac Safari'
+      agent.user_agent = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.0 Safari/535.1";
+      agent.user_agent_alias = 'Linux Mozilla'
+      #agent.user_agent_alias = Mechanize::AGENT_ALIASES['Linux Mozilla']
     }
     
     begin
-      a.get(@req_url) do |page|
+      a.get(@req_url) do |page|        
         @rawdoc =  page.body
         @page = page
       end    
@@ -26,11 +32,23 @@ class SocialController < ApplicationController
       @rawdoc = "Page not found"
     end
     
-    @doc = Nokogiri::HTML(@rawdoc)
+    #@doc = Nokogiri::HTML(@rawdoc)
+    
+    #@doc.css("img").each do |img|
+    #  puts img['src']
+    #end
     
     base_uri = URI(@req_url.to_s)
     
     image_urls = @page.image_urls.map { |i| i.to_s }
+    
+    if image_urls.length == 0
+      puts "No images Found"
+      
+      #try searching background images
+      
+      
+    end
 
     puts image_urls
 
@@ -45,7 +63,7 @@ class SocialController < ApplicationController
     @images = image_urls.uniq
     
     # return array as JSON object
-    render :json => { :images => @images, :title => @title , :description => @desc }
+    render :json => { :images => @images, :title => @title , :description => @desc, :doc => @rawdoc }
   end
 
 end

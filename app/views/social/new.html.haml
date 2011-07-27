@@ -108,7 +108,7 @@
     });
   
     // TODO : Try better RE
-    var url_re = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    var url_re = /((http|https?:\/\/)?((?:[-a-z0-9]+\.)+[a-z]{2,}))/ig;
     
     var last_processed_url = null;
     
@@ -135,6 +135,7 @@
           function(json) {
             //alert("So this is resp " + JSON.stringify(json) );
             load_images(json.images);
+            //$("#debug").val(json.doc);
             //$("#page_title").html(json.title);
             //$("#page_description").html(json.description);
           },
@@ -142,9 +143,15 @@
       );
     }
     
+    var last_partial_url_id = 
+    
     $('#status').keyup(function(event){
       if (event.which == 32){
         process_url();
+      }
+      else
+      {
+        
       }
     });
     
@@ -183,7 +190,7 @@
 %span#selector_status
 
 =form_tag "/social/create", :remote => true, :id => "status_form" do
-  =text_field_tag "status", "http://www.nytimes.com/"
+  =text_field_tag "status", "www.google.com"
   =hidden_field_tag "image_url"
   %button{:id => "get_images"} Get Images
   =submit_tag "Send"
