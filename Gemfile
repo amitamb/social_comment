@@ -5,3 +5,6 @@ gem 'sqlite3'
 
 gem 'haml-rails'
 gem 'jquery-rails'
+
+gem 'nokogiri'
+gem 'mechanize'
