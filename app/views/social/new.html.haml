@@ -1,5 +1,8 @@
 :css
-  table#img_selector_parent { 
+  #img_selector_parent{
+    display:none;
+  }
+  #img_selector_parent table{ 
     width: 104px;
     height: 104px;
     border:1px solid #ddd;
@@ -56,8 +59,16 @@
     
     function clear_images(){
       $("#img_selector").html("");
-      total_images = 0;
+    }
+    
+    function reset_all(){
       current_image_indx = null;
+      total_images = 0;
+      
+      $("#img_selector_parent").css({ "display" : "block" });
+      $("#img_selector").html('#{ image_tag 'loading.gif', :style => 'display:block;' }');
+      
+      toggle_navigation();
     }
     
     function append_image(image_elem){
@@ -97,7 +108,9 @@
     });
   
     // TODO : Try better RE
-    var url_re = /((http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?)/ix;
+    var url_re = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    
+    var last_processed_url = null;
     
     function process_url(){
       var matches = $("#status").val().match(url_re);
@@ -108,7 +121,13 @@
 
       var url = matches[0];
       
-      $("#img_selector").html('#{ image_tag 'loading.gif', :style => 'display:block;' }');
+      if (last_processed_url && last_processed_url == url){
+        return;
+      }
+      
+      last_processed_url = url;
+      
+      reset_all();
       
       $.post(
           '/social/scrape',  
@@ -135,23 +154,25 @@
     
     $("#get_images").click(function(){
       process_url();
+      return false;
     });
 
   });
 
 #offscreen_div
 
-%table#img_selector_parent
-  %tr
-    %td#img_selector{ :align => "center" }
-      -# = image_tag "loading.gif", :style => "display:block;"
-      
--#title_and_description
-  -#page_title
-  -#page_description
+#img_selector_parent
+  %table
+    %tr
+      %td#img_selector{ :align => "center" }
+        -# = image_tag "loading.gif", :style => "display:block;"
 
-%button#prev_image &lt;
-%button#next_image &gt;
+  -#title_and_description
+    -#page_title
+    -#page_description
+
+  %button#prev_image{ :disabled => 'disabled' } &lt;
+  %button#next_image{ :disabled => 'disabled' } &gt;
 
 %span#selector_status
 
