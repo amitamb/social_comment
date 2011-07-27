@@ -17,7 +17,8 @@ class SocialController < ApplicationController
     
     begin
       a.get(@req_url) do |page|
-        @rawdoc =  page.body 
+        @rawdoc =  page.body
+        @page = page
       end    
     rescue
       @rawdoc = "Page not found"
@@ -27,20 +28,19 @@ class SocialController < ApplicationController
     
     base_uri = URI(@req_url.to_s)
     
-    image_urls = []
+    image_urls = @page.image_urls.map { |i| i.to_s }
     
-    @doc.css("img").each do |img|
-      img_url = (base_uri + img['src']).to_s
-      # do some preliminary filtering if req
-      image_urls << img_url
-    end
+    puts image_urls[0].class
+    
+    puts image_urls
   
     # receive post data from ajax
     # make http call to posted url
     # parse response body with nokogiri (orr other) to extract image links
     #
     # combine images into array
-    @images = image_urls.uniq!
+    @images = image_urls.uniq
+    
     # return array as JSON object
     render :json => @images
   end

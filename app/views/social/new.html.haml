@@ -1,8 +1,27 @@
 = stylesheet_link_tag "anythingslider.css"
 
 :css
-  #img_selector { width:100px; height:100px;  border:1px solid; }
-  #img_selector > img { width:100px; height:100px; }
+  table#img_selector_parent { 
+    width: 104px;
+    height: 104px;
+    border:1px solid #ddd;
+    border-spacing:0;
+  }
+  table#img_selector_parent td{ 
+    text-align:center;
+  }
+  #img_selector { 
+
+  }
+  #img_selector > img {
+    max-width:100px;
+    max-height:100px;
+    margin-left:auto;
+    margin-right:auto;
+    display:none;
+  }
+    
+  #offscreen_div {position:absolute; left:-5000px; }
 
 
 / Older IE stylesheet, to reposition navigation arrows, added AFTER the theme stylesheet above
@@ -17,33 +36,74 @@
   
     var image_elems = [];
     
-    var current_image_indx;
+    var current_image_indx = null;
     var total_images = 0;
     
     function select_image(indx){
       current_image_indx = indx;
       $("#img_selector img").css({ "display" : "none"});
-      var current_img = $("#img_selector img:nth-child(" + (current_image_indx + 3) + ")");
+      var current_img = $("#img_selector img:nth-child(" + (current_image_indx + 1) + ")");
       current_img.css({"display" : "block"});
       $("#status_form #image_url").val(current_img.attr("src"));
     }
+    
+    function toggle_navigation(){
+      if (current_image_indx + 1 < total_images){
+        $("#next_image").removeAttr('disabled');
+      }
+      else
+      {
+        $("#next_image").attr('disabled', 'disabled');
+      }
+      if (current_image_indx > 0){
+        $("#prev_image").removeAttr('disabled');
+      }
+      else
+      {
+        $("#prev_image").attr('disabled', 'disabled');
+      }
+    }
+    
+    function clear_images(){
+      $("#img_selector").html("");
+      total_images = 0;
+      current_image_indx = null;
+    }
+    
+    function append_image(image_elem){
+      if (current_image_indx == null){
+        $("#img_selector").html("");
+      }
+      image_elem.appendTo("#img_selector");
+      total_images++;
+      if ( current_image_indx == null ){
+        select_image(0);
+      }
+
+      toggle_navigation();
+    }
   
     function load_images(images){
-      $("#img_selector").html("<span></span>");
+      $("#img_selector").html('#{ image_tag 'loading.gif', :style => 'display:block;' }');
       for (var image in images){
         var new_img = $("<img src='"+ images[image] +"' />");
-        new_img.appendTo("#img_selector");
+        new_img.appendTo("#offscreen_div");
+        new_img.load(function(){
+          if ($(this).width() > 50 && $(this).height() > 50){
+            append_image($(this))
+          }
+        });
       }
-      total_images = images.length;
-      select_image(0);
     }
     
     $("#prev_image").click(function(){
-      select_image(current_image_indx - 1);
+      select_image((current_image_indx - 1 + total_images) % total_images);
+      toggle_navigation();
     });
     
     $("#next_image").click(function(){
-      select_image(current_image_indx + 1);
+      select_image((current_image_indx + 1) % total_images);
+      toggle_navigation();
     });
   
     // TODO : Try better RE
@@ -61,7 +121,8 @@
       $.post(
           '/social/scrape',  
           {url: url},  
-          function(json) {  
+          function(json) {
+            alert("So this is resp " + JSON.stringify(json) );
             load_images(json);
           },
           "json"
@@ -76,7 +137,12 @@
 
   });
 
-#img_selector
+#offscreen_div
+
+%table#img_selector_parent
+  %tr
+    %td#img_selector{ :align => "center" }
+      = image_tag "loading.gif", :style => "display:block;"
 
 %button#prev_image &lt;
 %button#next_image &gt;
