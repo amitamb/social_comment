@@ -7,6 +7,7 @@
     height: 104px;
     border:1px solid #ddd;
     border-spacing:0;
+    margin:5px 0;
   }
   table#img_selector_parent td{ 
     text-align:center;
@@ -179,15 +180,17 @@
       process_url();
       return false;
     });
+    
+    process_url();
 
   });
 
 #offscreen_div
 
 =form_tag "/social/create", :remote => true, :id => "status_form" do
-  =text_field_tag "status", "www.google.com"
+  =text_field_tag "status", "www.ibm.com"
   =hidden_field_tag "image_url"
-  %button{:id => "get_images"} Get Images
+  -# %button{:id => "get_images"} Get Images
   =submit_tag "Send"
 
 #img_selector_parent
