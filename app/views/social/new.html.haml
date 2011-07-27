@@ -33,6 +33,7 @@
     var current_image_indx = null;
     var total_images = 0;
     var img_selector_loading; // TODO: Later for handling multiple loading
+    var waittimeout_timeout_id = null;
     
     function select_image(indx){
       current_image_indx = indx;
@@ -72,6 +73,12 @@
       current_image_indx = null;
       total_images = 0;
       
+      if (waittimeout_timeout_id){
+        clearTimeout(waittimeout_timeout_id);
+      }
+
+      waittimeout_timeout_id = null;
+      
       $("#img_selector_parent").css({ "display" : "block" });
       $("#img_selector").html('#{ image_tag 'loading.gif', :style => 'display:block;' }');
       
@@ -96,6 +103,16 @@
       
       if (images.length == 0){
         hide_all();
+      }
+      else
+      {
+        waittimeout_timeout_id = setTimeout(function(){
+          // if no image appended after 5 seconds hide it
+          if (!total_images || total_images <= 0){
+            hide_all();
+          }
+          waittimeout_timeout_id = null;
+        }, 5000);
       }
       
       for (var image in images){
