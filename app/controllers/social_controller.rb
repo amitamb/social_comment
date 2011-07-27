@@ -5,6 +5,8 @@ class SocialController < ApplicationController
 
   def create
     # accept postd comment data
+    @status = params[:status]
+    @image_url = params[:image_url]
   end
 
   def scrape
@@ -29,11 +31,12 @@ class SocialController < ApplicationController
     base_uri = URI(@req_url.to_s)
     
     image_urls = @page.image_urls.map { |i| i.to_s }
-    
-    puts image_urls[0].class
-    
+
     puts image_urls
-  
+
+    @title = @page.title
+    @desc = "TODO: Extract description from the document."
+
     # receive post data from ajax
     # make http call to posted url
     # parse response body with nokogiri (orr other) to extract image links
@@ -42,7 +45,7 @@ class SocialController < ApplicationController
     @images = image_urls.uniq
     
     # return array as JSON object
-    render :json => @images
+    render :json => { :images => @images, :title => @title , :description => @desc }
   end
 
 end
