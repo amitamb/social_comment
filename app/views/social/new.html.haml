@@ -32,7 +32,6 @@
     
     var current_image_indx = null;
     var total_images = 0;
-    var img_selector_loading; // TODO: Later for handling multiple loading
     var waittimeout_timeout_id = null;
     
     function select_image(indx){
@@ -165,6 +164,7 @@
           '/social/scrape',  
           {url: url},  
           function(json) {
+            if ( !json ) { hide_all(); } // page not found
             //alert("So this is resp " + JSON.stringify(json) );
             load_images(json.images);
             //$("#debug").val(json.doc);
