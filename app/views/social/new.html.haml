@@ -1,3 +1,5 @@
+= javascript_include_tag 'search.js'
+
 :css
   #img_selector_parent{
     display:none;
@@ -22,8 +24,22 @@
     margin-right:auto;
     display:none;
   }
-    
+
   #offscreen_div {position:absolute; left:-5000px; width:1px; overflow:hidden; }
+  
+  #status_holder { width:300px; position:relative; background-color:; display:block; }
+  #status { width:100%; background-color:; }
+  #search { position:absolute; top:0px; right:0px; background:url(/images/search.png); border:0; padding:0; margin:4px 1px; height:16px; width:16px; }
+
+  #main-dropdown { position:absolute; top:100%; right:0%; border:1px solid #ddd; background-color:; }
+  #dropdown  { list-style-type:none; font-size:13px; }
+  #dropdown, #dropdown * { padding:0px; margin:0px; }
+  #dropdown li  { max-width:200px; white-space:nowrap; overflow:hidden; }
+  #dropdown a, #dropdown a:visited { text-decoration:none; color:Black; width:100%; display:block; }
+  #dropdown a:hover { background-color:#ccc; }
+  
+  .hide{ display:block; }
+  .show{ display:block; }
 
 :javascript
   $(function(){
@@ -161,7 +177,7 @@
       reset_all();
       
       $.post(
-          '/social/scrape',  
+          '/social/scrape',
           {url: url},  
           function(json) {
             if ( !json ) { hide_all(); } // page not found
@@ -205,7 +221,15 @@
 #offscreen_div
 
 =form_tag "/social/create", :remote => true, :id => "status_form" do
-  =text_field_tag "status", "www.ibm.com"
+  #status_holder
+    =text_field_tag "status", ""
+    %button#search
+    #drop_down
+    .hide#main-dropdown
+      %ul#dropdown
+        -# %li
+          -# %a{ :href => "/"} D1
+
   =hidden_field_tag "image_url"
   -# %button{:id => "get_images"} Get Images
   =submit_tag "Send"
@@ -224,5 +248,3 @@
   %button#next_image{ :disabled => 'disabled' } &gt;
 
 %span#selector_status
-
-
