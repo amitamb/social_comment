@@ -7,9 +7,17 @@ $(document).ready(function(){
 		page		: 0				// The start page
 	}
   
+  var last_selected_url = null;
+  
   $("#search").click(function(){
     if ( config.term = $("#status").val() ){
-      googleSearch();
+      if (config.term == last_selected_url){
+        $("#main-dropdown").toggleClass('show hide');
+      }
+      else
+      {
+        googleSearch();
+      }
     }
 		return false;
   });
@@ -56,6 +64,7 @@ $(document).ready(function(){
             var url = $(this).attr("href");
             $("#main-dropdown").toggleClass('hide show');
             $("#status").val(url);
+            last_selected_url = url;
             $("#status").change();
             return false;
           });

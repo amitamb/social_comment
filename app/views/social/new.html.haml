@@ -150,15 +150,17 @@
       select_image((current_image_indx + 1) % total_images);
       toggle_navigation();
     });
-  
-    // TODO : Try better RE
-    var url_re = /((http|https?:\/\/)?((?:[-a-z0-9]+\.)+[a-z]{2,}))/ig;
+
+    // Original regex just to identify www. / ftp. urls also has support for ftp/file protocol
+    // /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:;,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[A-Z0-9+&@#\/%=~_|$])/ix
+
+    var url_re = /(?:(?:https?):\/\/|[-A-Z0-9]+\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:;,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[A-Z0-9+&@#\/%=~_|$])/ix;
     
     var last_processed_url = null;
     
     function process_url(){
       var matches = $("#status").val().match(url_re);
-      
+
       if (!matches) {
         if (last_processed_url){
           hide_all();
