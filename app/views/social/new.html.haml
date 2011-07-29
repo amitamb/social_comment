@@ -27,9 +27,9 @@
 
   #offscreen_div {position:absolute; left:-5000px; width:1px; overflow:hidden; }
   
-  #status_holder { width:300px; position:relative; background-color:; display:block; }
+  #status_holder { width:300px; position:relative; background-color:; display:inline-block; }
   #status { width:100%; background-color:; }
-  #search { position:absolute; top:0px; right:0px; background:url(/images/search.png); border:0; padding:0; margin:4px 1px; height:16px; width:16px; }
+  #search { position:absolute; top:0px; right:0px; background-image:url(/images/search.png); background-color:white; border:0; padding:0; margin:4px 1px; height:16px; width:16px; }
 
   #main-dropdown { position:absolute; top:100%; right:0%; border:1px solid #ddd; background-color:; }
   #dropdown  { list-style-type:none; font-size:13px; }
@@ -38,7 +38,7 @@
   #dropdown a, #dropdown a:visited { text-decoration:none; color:Black; width:100%; display:block; }
   #dropdown a:hover { background-color:#ccc; }
   
-  .hide{ display:block; }
+  .hide{ display:none; }
   .show{ display:block; }
 
 :javascript
@@ -222,7 +222,7 @@
 
 =form_tag "/social/create", :remote => true, :id => "status_form" do
   #status_holder
-    =text_field_tag "status", ""
+    =text_field_tag "status", "facebook"
     %button#search
     #drop_down
     .hide#main-dropdown
