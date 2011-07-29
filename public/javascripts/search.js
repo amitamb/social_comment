@@ -3,12 +3,12 @@ $(document).ready(function(){
 	var config = {
 		type		: 'web',
 		append		: false,
-		perPage		: 8,			// A maximum of 8 is allowed by Google
+		perPage		: 5,			// A maximum of 8 is allowed by Google
 		page		: 0				// The start page
 	}
-  
+
   var last_selected_url = null;
-  
+
   $("#search").click(function(){
     if ( config.term = $("#status").val() ){
       if (config.term == last_selected_url){
@@ -59,8 +59,17 @@ $(document).ready(function(){
         for (var i=0, len = results.length; i < len ; i++){
           var r = results[i];
 
-          var new_item = $("<li><a href='"+ r.unescapedUrl +"'>" + r.visibleUrl + "</a></li>")
-          new_item.children("a").click(function(){
+          var new_item = $("<li><a href='"+ r.unescapedUrl +"'>" + r.visibleUrl + "</a></li>");
+          
+          var new_item = $("<li>" + 
+                           "<a class='result_item' href='"+ r.unescapedUrl +"'>" +
+                           "<span class='r_title'>"+ r.titleNoFormatting +"</span><br />" +
+                           "<span class='r_desc'>"+ r.content +"</span><br />" +
+                           "<span class='r_vurl'>"+r.visibleUrl+"</span>" +
+                           "</a>" +
+                           "</li>")
+          
+          new_item.children(".result_item").click(function(){
             var url = $(this).attr("href");
             $("#main-dropdown").toggleClass('hide show');
             $("#status").val(url);

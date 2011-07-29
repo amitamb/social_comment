@@ -1,6 +1,10 @@
 = javascript_include_tag 'search.js'
 
 :css
+  body * {
+    font-size:16px;
+    font-family: Helvetica, Arial, sans-serif;
+  }
   #img_selector_parent{
     display:none;
   }
@@ -27,16 +31,24 @@
 
   #offscreen_div {position:absolute; left:-5000px; width:1px; overflow:hidden; }
   
-  #status_holder { width:300px; position:relative; background-color:; display:inline-block; }
+  #status_holder { width:400px; position:relative; background-color:; display:inline-block; }
   #status { width:100%; background-color:; }
-  #search { position:absolute; top:0px; right:0px; background-image:url(/images/search.png); background-color:white; border:0; padding:0; margin:4px 1px; height:16px; width:16px; }
+  #search { position:absolute; top:0px; right:0px; background-image:url(/images/search.png); background-color:white; border:0; padding:0; margin:6px 1px; height:16px; width:16px; }
 
-  #main-dropdown { position:absolute; top:100%; right:0%; border:1px solid #ddd; background-color:; }
+  #main-dropdown { position:absolute; top:100%; right:-3px; border:1px solid #ddd; background-color:; width:100%; }
   #dropdown  { list-style-type:none; font-size:13px; }
-  #dropdown, #dropdown * { padding:0px; margin:0px; }
-  #dropdown li  { max-width:200px; white-space:nowrap; overflow:hidden; }
-  #dropdown a, #dropdown a:visited { text-decoration:none; color:Black; width:100%; display:block; }
-  #dropdown a:hover { background-color:#ccc; }
+  #dropdown { padding:0px; margin:0px; }
+  #dropdown li  { overflow:; }
+  #dropdown a, #dropdown a:visited { text-decoration:none; color:Black; width:98%; display:block; }
+  #dropdown a:hover {  }
+  
+  .result_item  { line-height:100%; padding:1%; border:1px solid white; background-color:#fafafa; cursor:pointer; display:block; text-overflow:ellipsis; overflow:hidden; } /* height:30px; */
+  .result_item span {  }
+  .result_item:hover { background-color:#ffeded; }
+  .result_item  .r_title { font-size:0.8em; font-weight:bold; white-space:nowrap; }
+  .result_item  .r_desc { font-size:0.8em; font-weight:normal; white-space:wrap;  }
+  .result_item  .r_desc b { font-size:100%; font-weight:normal; }
+  .result_item  .r_vurl { font-size:0.8em; font-weight:normal; white-space:wrap; color:Green; }
   
   .hide{ display:none; }
   .show{ display:block; }
@@ -229,8 +241,16 @@
     #drop_down
     .hide#main-dropdown
       %ul#dropdown
-        -# %li
-          -# %a{ :href => "/"} D1
+        %li
+          .result_item
+            .r_title Test Title
+            .r_desc This is some long description and something more. What do you think about it?
+            .r_vurl www.facebook.com
+        %li
+          .result_item
+            .r_title Test Title
+            .r_desc This is some long description and something more. What do you think about it?
+            .r_vurl www.facebook.com
 
   =hidden_field_tag "image_url"
   -# %button{:id => "get_images"} Get Images
