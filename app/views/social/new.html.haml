@@ -31,9 +31,9 @@
 
   #offscreen_div {position:absolute; left:-5000px; width:1px; overflow:hidden; }
   
-  #status_holder { width:400px; position:relative; background-color:; display:inline-block; }
-  #status { width:100%; background-color:; }
-  #search { position:absolute; top:0px; right:0px; background-image:url(/images/search.png); background-color:white; border:0; padding:0; margin:6px 1px; height:16px; width:16px; }
+  #status_holder { width:400px; position:relative; display:inline-block;margin-right:5px; }
+  #status { width:100%; background-color:;border:1px solid #ddd;margin:0px;padding:2px;margin:0; }
+  #search { position:absolute; top:0px; right:0px; background-image:url(/images/search.png); background-color:Transparent; border:0; padding:0; margin:5px 1px; height:16px; width:16px; cursor:default; }
 
   #main-dropdown { position:absolute; top:100%; right:-3px; border:1px solid #ddd; background-color:; width:100%; }
   #dropdown  { list-style-type:none; font-size:13px; }
@@ -61,7 +61,7 @@
     var current_image_indx = null;
     var total_images = 0;
     var waittimeout_timeout_id = null;
-    
+
     function select_image(indx){
       current_image_indx = indx;
       $("#img_selector img").css({ "display" : "none"});
@@ -69,7 +69,7 @@
       current_img.css({"display" : "block"});
       $("#status_form #image_url").val(current_img.attr("src"));
     }
-    
+
     function toggle_navigation(){
       if (current_image_indx + 1 < total_images){
         $("#next_image").removeAttr('disabled');
@@ -166,7 +166,7 @@
     // Original regex just to identify www. / ftp. urls also has support for ftp/file protocol
     // /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:;,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[A-Z0-9+&@#\/%=~_|$])/ix
 
-    var url_re = /(?:(?:https?):\/\/|[-A-Z0-9]+\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:;,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[A-Z0-9+&@#\/%=~_|$])/ix;
+    var url_re = /(?:(?:https?):\/\/|[-A-Z0-9]+\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:;,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[A-Z0-9+&@#\/%=~_|$])/i;
     
     var last_processed_url = null;
     
